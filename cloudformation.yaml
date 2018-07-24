@@ -10,6 +10,7 @@ Resources:
       Handler: api.lambda_handler
       Runtime: python3.6
       CodeUri: src/
+      Policies: AmazonDynamoDBFullAccess
       Environment:
         Variables:
           BOOKS_TABLE_NAME: !Ref BooksTable
