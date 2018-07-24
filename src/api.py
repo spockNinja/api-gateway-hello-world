@@ -18,7 +18,7 @@ def add_book(event):
     books_table.put_item(Item=book_data)
 
 
-@lambda_handler.handle('get', path='/books/<str:book_id>/')
+@lambda_handler.handle('get', path='/books/<book_id>/')
 def get_book(event, book_id):
     book_details = books_table.get_item(
         Key={'id': book_id}
