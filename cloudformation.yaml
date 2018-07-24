@@ -19,22 +19,16 @@ Resources:
           Properties:
             Path: /books
             Method: get
-            RestApiId:
-              Ref: MyApi
         AddBooks:
           Type: Api
           Properties:
             Path: /books
             Method: post
-            RestApiId:
-              Ref: MyApi
         GetBook:
           Type: Api
           Properties:
             Path: /books/{bookId}
             Method: get
-            RestApiId:
-              Ref: MyApi
 
   BooksTable:
     Type: AWS::Serverless::SimpleTable
