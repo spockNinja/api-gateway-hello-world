@@ -13,7 +13,7 @@ books_table = dynamodb.Table(BOOKS_TABLE_NAME)
 
 @lambda_handler.handle('post', path='/books')
 def add_book(event):
-    book_data = event['json']
+    book_data = event['json']['body']
     book_data['id'] = slugify(book_data['title'])
     books_table.put_item(Item=book_data)
 
