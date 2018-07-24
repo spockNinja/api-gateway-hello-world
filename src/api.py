@@ -1,7 +1,7 @@
 import os
 
 from boto3 import resource
-from lambdarest imort lambda_handler
+from lambdarest import lambda_handler
 from slugify import slugify
 
 
