@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  LambdaPackageBucket:
+    Type: AWS::S3::Bucket
+
+  CloudFormationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: cloudformation.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+        - PolicyName: BuildCapabilities
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - cloudformation:*
+                  - iam:*
+                  - lambda:*
+                  - logs:*
+                  - s3:*
+                Effect: Allow
+                Resource: '*'
+
+  LambdaPackageJobRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+        - PolicyName: CodeBuildAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - cloudformation:*
+                  - logs:*
+                  - s3:*
+                Effect: Allow
+                Resource: '*'
+              - Action: iam:PassRole
+                Effect: Allow
+                Resource:
+                  Fn::GetAtt: [CloudFormationRole, Arn]
+
+  LambdaPackageJob:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: PythonApiBuilder
+      Description: Packages the lambda backend for the demo Python API
+      Source:
+        Type: GITHUB
+        Location: https://github.com/spockNinja/api-gateway-hello-world.git
+        BuildSpec: buildspec.yaml
+      ServiceRole:
+        Fn::GetAtt: [LambdaPackageJobRole, Arn]
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/python:3.5.2
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: S3_BUCKET
+            Value:
+              Ref: LambdaPackageBucket
+          - Name: CF_ROLE
+            Value:
+              Fn::GetAtt: [CloudFormationRole, Arn]

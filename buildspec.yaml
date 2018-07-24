@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - pip install -r requirements.txt -t src/
+  build:
+    commands:
+      - aws cloudformation package --template cloudformation.yaml --s3-bucket $S3_BUCKET --s3-prefix python-api-gateway --output-template template.yaml
+      - aws cloudformation deploy --stack-name APIGatewayPythonHelloWorld --template-file template.yaml --role-arn $CF_ROLE --capabilities CAPABILITY_IAM

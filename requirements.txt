@@ -1,0 +1,2 @@
+lambdarest==5.0.1
+python-slugify==1.2.5

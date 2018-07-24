@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Transform: 'AWS::Serverless-2016-10-31'
+
+Resources:
+
+  BooksApiLambdaHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: api.lambda_handler
+      Runtime: python3.6
+      CodeUri: src/
+      Environment:
+        Variables:
+          BOOKS_TABLE_NAME: !Ref BooksTable
+      Events:
+        GetBooks:
+          Type: Api
+          Properties:
+            Path: /books
+            Method: get
+            RestApiId:
+              Ref: MyApi
+        AddBooks:
+          Type: Api
+          Properties:
+            Path: /books
+            Method: post
+            RestApiId:
+              Ref: MyApi
+        GetBook:
+          Type: Api
+          Properties:
+            Path: /books/{bookId}
+            Method: get
+            RestApiId:
+              Ref: MyApi
+
+  BooksTable:
+    Type: AWS::Serverless::SimpleTable
+
+Outputs:
+  ApiURL:
+    Description: API endpoint URL for Prod environment
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/books/"
