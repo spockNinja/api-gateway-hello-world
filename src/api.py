@@ -27,6 +27,6 @@ def get_book(event, book_id):
 
 
 @lambda_handler.handle('get', path='/books')
-def get_books(event, book_id):
+def get_books(event):
     books = book_table.scan()
     return books['Items']
