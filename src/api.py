@@ -21,9 +21,11 @@ def add_book(event):
 
 @lambda_handler.handle('get', path='/books/<book_id>')
 def get_book(event, book_id):
-    print('book id: ', book_id)
+    # TODO figure out why lambdarest routing isn't finding book_id
+    # it is setting it to {bookId} instead of the actual book id
+    real_book_id = event['pathParameters']['bookId']
     book_details = books_table.get_item(
-        Key={'id': book_id}
+        Key={'id': real_book_id}
     )
     return book_details['Item']
 
