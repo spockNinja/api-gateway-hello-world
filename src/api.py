@@ -16,6 +16,7 @@ def add_book(event):
     book_data = event['json']['body']
     book_data['id'] = slugify(book_data['title'])
     books_table.put_item(Item=book_data)
+    return book_data
 
 
 @lambda_handler.handle('get', path='/books/<book_id>/')
