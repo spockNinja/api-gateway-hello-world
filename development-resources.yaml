@@ -71,6 +71,10 @@ Resources:
         Fn::GetAtt: [LambdaPackageJobRole, Arn]
       Artifacts:
         Type: NO_ARTIFACTS
+      Cache:
+        Type: S3
+        Location:
+          Fn::Sub: '${LambdaPackageBucket}/codebuid-cache'
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/python:3.5.2
