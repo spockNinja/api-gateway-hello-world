@@ -23,5 +23,6 @@ When you make a change to your fork's master branch, you can simply re-run the C
 
 #### TODOs
 * Tests!!!
+* API Payload validation
 * CI/CD with full CodeBuild/CodePipeline suite
 * More or different functionality
